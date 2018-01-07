@@ -1,10 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="x-ua-compatible" content="IE=11">
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+	function sentMsg() {
+		// 初始化XMLHttpRequest对象  
+		xmlHttpRequest = CreateXMLHttpRequest();
+		// 设置请求响应的URL  
+		var uri = "http://localhost:8080/A/ServletA"
+		// 设置处理响应的回调函数  
+		xmlHttpRequest.onreadystatechange = processResponse;
+		// 设置以POST方式发送请求，并打开连接  
+		xmlHttpRequest.open("POST", uri, true);
+		// 设置POST请求的请求头  
+		xmlHttpRequest.setRequestHeader("Content-Type",
+				"application/x-www-form-urlencoded");
+		// 发送请求  
+		var msg = document.getElementById("inputMsg").innerHTML;
+		xmlHttpRequest.send("Message:" + msg);
+	}
+
+	function CreateXMLHttpRequest() {
+		var xmlHttpRequest;
+		if (window.ActiveXObject) {
+			xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		} else if (window.XMLHttpRequest) {
+			xmlHttpRequest = new XMLHttpRequest();
+		}
+		return xmlHttpRequest;
+	}
+
+	function processResponse() {
+		if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+			var b = xmlHttpRequest.responseText;
+			if (b == "true") {
+				alert("OK！");
+			} else {
+				alert("NG！");
+			}
+			// 		if (xmlhttp.readyState == 4) {
+			// 			if (xmlhttp.status == 200) {
+			// 				var dzb = eval("(" + xmlhttp.responseText + ")");
+			// 				alert(dzb.Address);
+			// 			}
+		}
+	}
+</script>
 </head>
 <body>
+	<div>
+		<input type="text" value="Hello World!" id="inputMsg" /> <input
+			type="button" value="Sent Msg" onclick="sentMsg()" />
+	</div>
 
+	<div>
+		<H1>WebSocket通信确认：</H1>
+		<input type="button" id="btnConnection" value="WebSocket连接" /> <input
+			type="button" id="btnClose" value="WebSocket关闭" /> <input
+			type="button" id="btnSend" value="WebSocket通信" />
+	</div>
+	<script src="js/jquery-1.11.1.min.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function() {
+			var socket;
+			if (typeof (WebSocket) == "undefined") {
+				alert("您的浏览器不支持WebSocket");
+				return;
+			}
+
+			$("#btnConnection").click(
+					function() {
+						//实现化WebSocket对象，指定要连接的服务器地址与端口
+						socket = new WebSocket(
+								"ws://localhost:8080/A/WSServerA/admin");
+						//打开事件
+						socket.onopen = function() {
+							console.log("Socket 已打开");
+							//socket.send("这是来自客户端的消息" + location.href + new Date());
+						};
+						//获得消息事件
+						socket.onmessage = function(msg) {
+							console.log("收到服务器端一下消息：" + msg.data);
+						};
+						//关闭事件
+						socket.onclose = function() {
+							console.log("Socket已关闭");
+						};
+						//发生了错误事件
+						socket.onerror = function() {
+							console.log("error!");
+						}
+					});
+
+			$("#btnSend").click(function() {
+				socket.send("这是来自:<" + location.href + ">客户端的消息:");
+			});
+
+			$("#btnClose").click(function() {
+				socket.close();
+			});
+		});
+	</script>
 </body>
 </html>
