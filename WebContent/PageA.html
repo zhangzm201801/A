@@ -19,7 +19,7 @@
 		xmlHttpRequest.onreadystatechange = function(){
 			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
 				var message  = xmlHttpRequest.responseText;
-				document.getElementById("myDiv").innerHTML=message;
+				document.getElementById("ReceiveMsg").innerHTML=message;
 			}
 		};
 		// 设置以POST方式发送请求，并打开连接  
@@ -35,11 +35,12 @@
 </head>
 <body>
 	<div>
-	    <H1>XMLHttpRequest发送确认：</H1>
+	    <H1>XMLHttpRequest通信确认：</H1>
 		<input type="text" value="Hello World!" id="inputMsg" /> <input
 			type="button" value="Sent Msg" onclick="sentMsg()" />
-	<div id="myDiv" style="font-color:red">
-   		<h2>接收来自服务器的消息</h2>
+	<div id="myDiv" style="color:red">
+   		<h5>以下是接收自服务器的消息:</h5>
+   		<span id="ReceiveMsg"></span>
    	</div>
 	</div>
 
