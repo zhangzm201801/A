@@ -7,11 +7,21 @@
 <script type="text/javascript">
 	function sentMsg() {
 		// 初始化XMLHttpRequest对象  
-		xmlHttpRequest = CreateXMLHttpRequest();
+		var xmlHttpRequest;
+		if (window.ActiveXObject) {
+			xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		} else if (window.XMLHttpRequest) {
+			xmlHttpRequest = new XMLHttpRequest();
+		}
 		// 设置请求响应的URL  
 		var uri = "http://localhost:8080/A/ServletA"
 		// 设置处理响应的回调函数  
-		xmlHttpRequest.onreadystatechange = processResponse;
+		xmlHttpRequest.onreadystatechange = function(){
+			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+				var message  = xmlHttpRequest.responseText;
+				document.getElementById("myDiv").innerHTML=message;
+			}
+		};
 		// 设置以POST方式发送请求，并打开连接  
 		xmlHttpRequest.open("POST", uri, true);
 		// 设置POST请求的请求头  
@@ -21,28 +31,6 @@
 		var msg = document.getElementById("inputMsg").value;
 		xmlHttpRequest.send("Message=" + msg);
 	}
-
-	function CreateXMLHttpRequest() {
-		var xmlHttpRequest;
-		if (window.ActiveXObject) {
-			xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-		} else if (window.XMLHttpRequest) {
-			xmlHttpRequest = new XMLHttpRequest();
-		}
-		return xmlHttpRequest;
-	}
-
-	function processResponse() {
-		if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-			var message  = xmlHttpRequest.responseText;
-			document.getElementById("myDiv").innerHTML=message;
-			// 		if (xmlhttp.readyState == 4) {
-			// 			if (xmlhttp.status == 200) {
-			// 				var dzb = eval("(" + xmlhttp.responseText + ")");
-			// 				alert(dzb.Address);
-			// 			}
-		}
-	}
 </script>
 </head>
 <body>
@@ -50,7 +38,7 @@
 	    <H1>XMLHttpRequest发送确认：</H1>
 		<input type="text" value="Hello World!" id="inputMsg" /> <input
 			type="button" value="Sent Msg" onclick="sentMsg()" />
-	<div id="myDiv" style="background-color:red">
+	<div id="myDiv" style="font-color:red">
    		<h2>接收来自服务器的消息</h2>
    	</div>
 	</div>
