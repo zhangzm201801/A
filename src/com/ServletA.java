@@ -55,12 +55,12 @@ public class ServletA extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		clientMsg = request.getParameter("Message");
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.println("The Parameter are:"+request.getParameter("Message"));
+		out.println(clientMsg);
 		out.flush();
 		out.close();
-		clientMsg = request.getParameter("Message");
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 

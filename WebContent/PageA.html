@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="x-ua-compatible" content="IE=11">
 <meta charset="UTF-8">
+<script src="js/jquery-1.11.1.min.js" type="text/javascript"
+		charset="utf-8"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
 	function sentMsg() {
@@ -31,6 +33,48 @@
 		var msg = document.getElementById("inputMsg").value;
 		xmlHttpRequest.send("Message=" + msg);
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	$(function() {
+		var socket;
+		if (typeof (WebSocket) == "undefined") {
+			alert("您的浏览器不支持WebSocket");
+			return;
+		}
+
+		$("#btnConnection").click(
+				function() {
+					//实现化WebSocket对象，指定要连接的服务器地址与端口
+					socket = new WebSocket(
+							"ws://localhost:8080/A/WSServerA/admin");
+					//打开事件
+					socket.onopen = function() {
+						console.log("Socket 已打开");
+						//socket.send("这是来自客户端的消息" + location.href + new Date());
+					};
+					//获得消息事件
+					socket.onmessage = function(msg) {
+						console.log("收到服务器端一下消息：" + msg.data);
+						$("#wsReceiveMsg").text(msg.data);
+						
+					};
+					//关闭事件
+					socket.onclose = function() {
+						console.log("Socket已关闭");
+					};
+					//发生了错误事件
+					socket.onerror = function() {
+						console.log("error!");
+					}
+				});
+
+		$("#btnSend").click(function() {
+			socket.send("这是来自:<" + location.href + ">客户端的消息:");
+		});
+
+		$("#btnClose").click(function() {
+			socket.close();
+		});
+	});
 </script>
 </head>
 <body>
@@ -38,7 +82,7 @@
 	    <H1>XMLHttpRequest通信确认：</H1>
 		<input type="text" value="Hello World!" id="inputMsg" /> <input
 			type="button" value="Sent Msg" onclick="sentMsg()" />
-	<div id="myDiv" style="color:red">
+	<div style="color:red">
    		<h5>以下是接收自服务器的消息:</h5>
    		<span id="ReceiveMsg"></span>
    	</div>
@@ -49,49 +93,10 @@
 		<input type="button" id="btnConnection" value="WebSocket连接" /> <input
 			type="button" id="btnClose" value="WebSocket关闭" /> <input
 			type="button" id="btnSend" value="WebSocket通信" />
+		<div style="color:red">
+   		<h5>以下是接收自服务器推送的消息:</h5>
+   		<span id="wsReceiveMsg"></span>
+   	</div>
 	</div>
-	<script src="js/jquery-1.11.1.min.js" type="text/javascript"
-		charset="utf-8"></script>
-	<script type="text/javascript">
-		$(function() {
-			var socket;
-			if (typeof (WebSocket) == "undefined") {
-				alert("您的浏览器不支持WebSocket");
-				return;
-			}
-
-			$("#btnConnection").click(
-					function() {
-						//实现化WebSocket对象，指定要连接的服务器地址与端口
-						socket = new WebSocket(
-								"ws://localhost:8080/A/WSServerA/admin");
-						//打开事件
-						socket.onopen = function() {
-							console.log("Socket 已打开");
-							//socket.send("这是来自客户端的消息" + location.href + new Date());
-						};
-						//获得消息事件
-						socket.onmessage = function(msg) {
-							console.log("收到服务器端一下消息：" + msg.data);
-						};
-						//关闭事件
-						socket.onclose = function() {
-							console.log("Socket已关闭");
-						};
-						//发生了错误事件
-						socket.onerror = function() {
-							console.log("error!");
-						}
-					});
-
-			$("#btnSend").click(function() {
-				socket.send("这是来自:<" + location.href + ">客户端的消息:");
-			});
-
-			$("#btnClose").click(function() {
-				socket.close();
-			});
-		});
-	</script>
 </body>
 </html>
