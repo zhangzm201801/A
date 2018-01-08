@@ -25,7 +25,7 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/WSServerA/{user}")
 public class ServletA extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static String clientMsg = "";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -60,7 +60,7 @@ public class ServletA extends HttpServlet {
 		out.println("The Parameter are:"+request.getParameter("Message"));
 		out.flush();
 		out.close();
-		
+		clientMsg = request.getParameter("Message");
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -90,7 +90,7 @@ public class ServletA extends HttpServlet {
 	@OnMessage
 	public String onMessage(String message, Session session) {
 		System.out.println(currentUser + "£º" + message);
-		return currentUser + "£º" + message;
+		return clientMsg;
 	}
 
 	/**
