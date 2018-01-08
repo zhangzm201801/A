@@ -18,8 +18,8 @@
 		xmlHttpRequest.setRequestHeader("Content-Type",
 				"application/x-www-form-urlencoded");
 		// 发送请求  
-		var msg = document.getElementById("inputMsg").innerHTML;
-		xmlHttpRequest.send("Message:" + msg);
+		var msg = document.getElementById("inputMsg").value;
+		xmlHttpRequest.send("Message=" + msg);
 	}
 
 	function CreateXMLHttpRequest() {
@@ -34,12 +34,8 @@
 
 	function processResponse() {
 		if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-			var b = xmlHttpRequest.responseText;
-			if (b == "true") {
-				alert("OK！");
-			} else {
-				alert("NG！");
-			}
+			var message  = xmlHttpRequest.responseText;
+			document.getElementById("myDiv").innerHTML=message;
 			// 		if (xmlhttp.readyState == 4) {
 			// 			if (xmlhttp.status == 200) {
 			// 				var dzb = eval("(" + xmlhttp.responseText + ")");
@@ -51,8 +47,12 @@
 </head>
 <body>
 	<div>
+	    <H1>XMLHttpRequest发送确认：</H1>
 		<input type="text" value="Hello World!" id="inputMsg" /> <input
 			type="button" value="Sent Msg" onclick="sentMsg()" />
+	<div id="myDiv" style="background-color:red">
+   		<h2>接收来自服务器的消息</h2>
+   	</div>
 	</div>
 
 	<div>

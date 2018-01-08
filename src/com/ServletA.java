@@ -57,8 +57,7 @@ public class ServletA extends HttpServlet {
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.println("The Parameter are £º"+request.getParameter("msg"));
-		out.print(this.getClass());
+		out.println("The Parameter are:"+request.getParameter("Message"));
 		out.flush();
 		out.close();
 		
