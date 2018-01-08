@@ -100,6 +100,7 @@ public class ServletA extends HttpServlet {
 	public void onClose(Session session, CloseReason closeReason) {
 		
 		System.out.println(String.format("Session %s closed because of %s", session.getId(), closeReason));
+		clientMsg = "";
 	}
 
 	//连接错误时执行

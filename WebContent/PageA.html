@@ -33,6 +33,7 @@
 					//关闭事件
 					socket.onclose = function() {
 						console.log("Socket已关闭");
+						$("#wsReceiveMsg").text("");
 					};
 					//发生了错误事件
 					socket.onerror = function() {
